@@ -5,7 +5,7 @@ package autogestionestudiantil;
  *
  * @author lauta
  */
-public class NewClassMateria implements Consultable {
+public class Materia implements Consultable {
     
     // 1. Atributos encapsulados
     private String nombre;
@@ -17,7 +17,7 @@ public class NewClassMateria implements Consultable {
     private static java.util.Set<String> codigosUtilizados = new java.util.HashSet<>();
 
     // Constructor
-   public NewClassMateria(String nombre, String codigo, int cuatrimestre, int anio) {
+   public Materia(String nombre, String codigo, int cuatrimestre, int anio) {
         this.nombre = nombre;
         this.anio = anio;
         
@@ -34,7 +34,7 @@ public class NewClassMateria implements Consultable {
         this.cuatrimestre = cuatrimestre;
     }
 
-    public NewClassMateria() {}
+    public Materia() {}
 
     // Setters con las validaciones del 10
     public void setCodigo(String codigo) {
