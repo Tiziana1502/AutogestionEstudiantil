@@ -7,36 +7,36 @@ package autogestionestudiantil;
  */
 public class Materia implements Consultable {
     
-    // 1. Atributos encapsulados
+   
     private String nombre;
     private String codigo;
     private int cuatrimestre;
     private int anio;
-
-    // Colección para validar código único
+ 
     private static java.util.Set<String> codigosUtilizados = new java.util.HashSet<>();
 
-    // Constructor
+   
    public Materia(String nombre, String codigo, int cuatrimestre, int anio) {
         this.nombre = nombre;
         this.anio = anio;
         
-        // Ejecutamos las validaciones manualmente aquí para evitar los warnings
         if (codigosUtilizados.contains(codigo)) {
             throw new IllegalArgumentException("El código ya existe.");
         }
         this.codigo = codigo;
         codigosUtilizados.add(codigo);
-
+        if (codigo == null || codigo.trim().length() < 3 || codigo.trim().length() > 10) 
+        {
+            throw new IllegalArgumentException("El codigo debe tener entre 3 y 10 caracteres.");
+        }
+        
         if (cuatrimestre != 1 && cuatrimestre != 2) {
             throw new IllegalArgumentException("El cuatrimestre debe ser 1 o 2.");
         }
         this.cuatrimestre = cuatrimestre;
     }
-
-    public Materia() {}
-
-    // Setters con las validaciones del 10
+ 
+ 
     public void setCodigo(String codigo) {
         if (codigosUtilizados.contains(codigo)) {
             throw new IllegalArgumentException("El código ya existe.");
@@ -52,10 +52,24 @@ public class Materia implements Consultable {
         this.cuatrimestre = cuatrimestre;
     }
     
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setAnio(int anio) { this.anio = anio; }
-
-    // Getters básicos
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacio.");
+        }
+        this.nombre = nombre;
+    }
+    
+    public void setAnio(int anio) { this.anio = anio; }  
+    
+    public boolean coincideCodigo(String codigoBuscado) {
+        return this.codigo.equalsIgnoreCase(codigoBuscado.trim());
+    }
+  
+    public boolean coincideNombre(String textoBuscado) {
+        return this.nombre.toLowerCase().contains(textoBuscado.trim().toLowerCase());
+    }
+    
+    //Getters
     public String getNombre() { return nombre; }
     public String getCodigo() { return codigo; }
     public int getCuatrimestre() { return cuatrimestre; }
