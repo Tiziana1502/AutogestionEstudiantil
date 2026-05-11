@@ -12,16 +12,14 @@ public class Materia implements Consultable {
     private String codigo;
     private int cuatrimestre;
     private int anio;
-
-    // Colección para validar código único
+  
     private static java.util.Set<String> codigosUtilizados = new java.util.HashSet<>();
 
     // Constructor
    public Materia(String nombre, String codigo, int cuatrimestre, int anio) {
         this.nombre = nombre;
-        this.anio = anio;
+        this.anio = anio;        
         
-        // Ejecutamos las validaciones manualmente aquí para evitar los warnings
         if (codigosUtilizados.contains(codigo)) {
             throw new IllegalArgumentException("El código ya existe.");
         }
@@ -36,7 +34,6 @@ public class Materia implements Consultable {
 
     public Materia() {}
 
-    // Setters con las validaciones del 10
     public void setCodigo(String codigo) {
         if (codigosUtilizados.contains(codigo)) {
             throw new IllegalArgumentException("El código ya existe.");
