@@ -23,8 +23,6 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         this.materias = new ArrayList<>();
     }
  
-    // ─── Implementacion de Consultable ────────────────────────────────────────
- 
     @Override
     public void mostrarResumen() {
         System.out.println("=== Resumen de Estudiante ===");
