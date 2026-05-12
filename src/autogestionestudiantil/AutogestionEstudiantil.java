@@ -3,14 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package autogestionestudiantil;
+import java.util.Scanner;
+import java.util.ArrayList;
+
 /**
  *
  * @author rossi
  */
-
-import java.util.Scanner;
-import java.util.ArrayList;
-
 public class AutogestionEstudiantil {
 
     /**
