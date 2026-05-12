@@ -5,7 +5,9 @@ package autogestionestudiantil;
  *
  * @author lauta
  */
-public class Materia implements Consultable { 
+public class Materia_1 implements Consultable {
+    
+   
     private String nombre;
     private String codigo;
     private int cuatrimestre;
@@ -14,7 +16,7 @@ public class Materia implements Consultable {
     private static java.util.Set<String> codigosUtilizados = new java.util.HashSet<>();
 
    
-   public Materia(String nombre, String codigo, int cuatrimestre, int anio) {
+   public Materia_1(String nombre, String codigo, int cuatrimestre, int anio) {
         this.nombre = nombre;
         this.anio = anio;
         
@@ -33,6 +35,7 @@ public class Materia implements Consultable {
         }
         this.cuatrimestre = cuatrimestre;
     }
+ 
  
     public void setCodigo(String codigo) {
         if (codigosUtilizados.contains(codigo)) {
@@ -78,5 +81,5 @@ public class Materia implements Consultable {
         System.out.println("Código: " + codigo);
         System.out.println("Cuatrimestre: " + cuatrimestre);
         System.out.println("Año: " + anio);
-    } 
+    }
 }
