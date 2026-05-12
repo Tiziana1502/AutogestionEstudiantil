@@ -8,7 +8,7 @@ package autogestionestudiantil;
  *
  * @author benja
  */
-public class materiaCuatrimestral extends Materia{
+public class materiaCuatrimestral extends Materia_1{
     // Constructor
     public materiaCuatrimestral(String nombre, String codigo, int cuatrimestre, int anio) {
         super(nombre, codigo, cuatrimestre, anio);

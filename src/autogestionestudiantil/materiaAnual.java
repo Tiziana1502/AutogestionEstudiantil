@@ -8,7 +8,7 @@ package autogestionestudiantil;
  *
  * @author benja
  */
-public class materiaAnual extends Materia{
+public class materiaAnual extends Materia_1{
    
     public materiaAnual(String nombre, String codigo, int anio) {
         super(nombre, codigo,1, anio);

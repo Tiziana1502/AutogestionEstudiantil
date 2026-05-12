@@ -11,12 +11,12 @@ package autogestionestudiantil;
 import java.util.ArrayList;
 
 public class InscripcionMateria implements Evaluable, Rankeable{
-    private Materia materia;
+    private Materia_1 materia;
     private int totalClases;
     private int clasesAsistidas;
     private ArrayList<Double> notas;;
     
-    InscripcionMateria(Materia materia){
+    InscripcionMateria(Materia_1 materia){
        this.totalClases = 0;
         this.clasesAsistidas = 0;
         this.notas = new ArrayList<>();
@@ -72,7 +72,7 @@ public class InscripcionMateria implements Evaluable, Rankeable{
         }
     }
     
-    public Materia getMateria() { return materia; }    
+    public Materia_1 getMateria() { return materia; }    
     public int getTotalClases() { return totalClases; }
     public int getClasesAsistidas() { return clasesAsistidas; }
     public ArrayList<Double> getNotas() { return new ArrayList<>(notas); }
