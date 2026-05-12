@@ -16,10 +16,11 @@ public class InscripcionMateria implements Evaluable, Rankeable{
     private int clasesAsistidas;
     private ArrayList<Double> notas;;
     
-    InscripcionMateria(String materia, int totalClases, int clasesAsistidas, double notas){
-        this.totalClases = totalClases;
-        this.clasesAsistidas = clasesAsistidas;
+    InscripcionMateria(Materia materia){
+       this.totalClases = 0;
+        this.clasesAsistidas = 0;
         this.notas = new ArrayList<>();
+        this.materia = materia;
     }
     
     public boolean registrarAsistencia(boolean presente){
@@ -70,6 +71,11 @@ public class InscripcionMateria implements Evaluable, Rankeable{
             System.out.println("Podes agregar " + restantes + " nota/s mas.");
         }
     }
+    
+    public Materia getMateria() { return materia; }    
+    public int getTotalClases() { return totalClases; }
+    public int getClasesAsistidas() { return clasesAsistidas; }
+    public ArrayList<Double> getNotas() { return new ArrayList<>(notas); }
     
     @Override
     public double getPuntajeRanking() {
