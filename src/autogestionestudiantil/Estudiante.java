@@ -146,7 +146,6 @@ public class Estudiante extends PersonaAcademica implements Consultable{
             this.anioIngreso = anioIngreso;
         }
     }
- 
     public ArrayList<InscripcionMateria> getMaterias() { return this.materias; }
 }
 
