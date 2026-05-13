@@ -31,7 +31,7 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         System.out.println("Carrera:  " + carrera);
         System.out.println("Ingreso:  " + anioIngreso);
         System.out.println("Materias: " + materias.size());
-        System.out.printf( "Promedio: %.2f%n", getPromedioGeneral());
+        //System.out.printf( "Promedio: %.2f%n", getPromedioGeneral());
     } 
    
     public void inscribirse(Materia_1 nuevaMateria) {
