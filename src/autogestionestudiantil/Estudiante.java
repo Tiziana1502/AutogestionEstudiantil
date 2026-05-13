@@ -34,7 +34,7 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         System.out.printf( "Promedio: %.2f%n", getPromedioGeneral());
     } 
    
-    public void inscribirse(Materia nuevaMateria) {
+    public void inscribirse(Materia_1 nuevaMateria) {
         if (nuevaMateria == null) return;
  
         for (InscripcionMateria ins : materias) {
