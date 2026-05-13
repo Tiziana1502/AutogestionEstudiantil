@@ -1,8 +1,9 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package autogestionestudiantil;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List; 
@@ -10,17 +11,18 @@ import java.util.List;
  *
  * @author rossi
  */
-public class AutogestionEstudiantil {
+public class Main {    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Scanner sc = new Scanner(System.in); 
-        Estudiante alumno = new Estudiante("Ana Garcia", "22001", "Interfaz Grafica", 2023);
+         Scanner sc = new Scanner(System.in); 
+        Estudiante alumno = new Estudiante("Agustina Bosco", "22001", "Probabilidad y Estadistica", 2023);
  
         int opcion;
+        sc.nextLine();
         do {
             System.out.println("\n=== MENU PRINCIPAL ===");
             System.out.println("1. Ver perfil");
@@ -384,6 +386,5 @@ public class AutogestionEstudiantil {
         if (materias.isEmpty()) return 0.0;
         if (index == materias.size()) return acumulado / materias.size();
         return calcularPromedioRecursivo(materias, index + 1, acumulado + materias.get(index).getPromedio());
-    }
-    
+    }    
 }
