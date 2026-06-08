@@ -121,12 +121,6 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         return criticas;
     }
     
-    public ArrayList<InscripcionMateria> getRankingMaterias() {
-        ArrayList<InscripcionMateria> listaOrdenada = new ArrayList<>(this.materias);
-        listaOrdenada.sort((m1, m2) -> Double.compare(m2.getPuntajeRanking(), m1.getPuntajeRanking()));
-        return listaOrdenada;
-    }
-
     public String getCarrera() { return carrera; }
  
     public void setCarrera(String carrera) {

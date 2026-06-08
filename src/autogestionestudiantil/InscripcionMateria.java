@@ -10,7 +10,7 @@
 package autogestionestudiantil;
 import java.util.ArrayList;
 
-public class InscripcionMateria implements Evaluable, Rankeable{
+public class InscripcionMateria implements Evaluable {
     private Materia_1 materia;
     private int totalClases;
     private int clasesAsistidas;
@@ -76,12 +76,7 @@ public class InscripcionMateria implements Evaluable, Rankeable{
     public int getTotalClases() { return totalClases; }
     public int getClasesAsistidas() { return clasesAsistidas; }
     public ArrayList<Double> getNotas() { return new ArrayList<>(notas); }
-    
-    @Override
-    public double getPuntajeRanking() {
-        return (getPromedio() * 0.6) + (getPorcentajeAsistencia() * 0.4);
-    }
- 
+     
     public double getPorcentajeAsistencia() {
         if (totalClases == 0) return 0.0;
         return ((double) clasesAsistidas / totalClases) * 100;

@@ -263,15 +263,7 @@ public class AutogestionEstudiantil {
                                     System.out.println("Materias Libres: " + libres);
                                     System.out.println("Materias en Riesgo: " + enRiesgo);
                                     System.out.println("Promedio General: " + alumno.getPromedioGeneral());
- 
-                                    ArrayList<InscripcionMateria> ranking = alumno.getRankingMaterias();
-                                    System.out.println("\n--- RANKING DE MATERIAS (Puntaje Descendente) ---");
-                                    int puesto = 1;
-                                    for (InscripcionMateria ins : ranking) {
-                                        System.out.println(puesto + " - " + ins.getMateria().getNombre()
-                                                + " | Puntaje: " + ins.getPuntajeRanking());
-                                        puesto++;
-                                    }
+                                    
                                 }
                                 break;
                             }
