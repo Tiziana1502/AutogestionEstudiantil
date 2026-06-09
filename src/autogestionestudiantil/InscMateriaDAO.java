@@ -20,7 +20,7 @@ public class InscMateriaDAO {
     public void guardarInscripciones(ArrayList<InscripcionMateria> inscripciones) { 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO))) { 
             for (InscripcionMateria ins : inscripciones) {
-                bw.write(toTexto(ins));
+                bw.write(ins.toTexto());
                 bw.newLine();
             } 
         } catch (IOException e) {
@@ -43,7 +43,7 @@ public class InscMateriaDAO {
                 
                 if (linea.isBlank()) continue;
  
-                InscripcionMateria ins = fromTexto(linea);
+                InscripcionMateria ins = InscripcionMateria.fromTexto(linea);
                 if (ins != null) {
                     lista.add(ins);
                 }

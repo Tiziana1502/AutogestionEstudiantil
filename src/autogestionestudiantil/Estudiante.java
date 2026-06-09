@@ -141,5 +141,18 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         }
     }
     public ArrayList<InscripcionMateria> getMaterias() { return this.materias; }
+
+    public String toTexto() {
+        return getNombre() + ";" + getLegajo() + ";" + carrera + ";" + anioIngreso;
+    }
+
+    public static Estudiante fromTexto(String linea) {
+        String[] partes = linea.split(";");
+        String nombre = partes[0];
+        String legajo = partes[1];
+        String carrera = partes[2];
+        int anioIngreso = Integer.parseInt(partes[3]);
+        return new Estudiante(nombre, legajo, carrera, anioIngreso);
+    }
 }
 
