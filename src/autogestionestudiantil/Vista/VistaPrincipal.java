@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package AutogestionEstudiantil;
+package autogestionestudiantil.Vista;
 
+import autogestionestudiantil.Vista.ControladorAutogestion;
 /**
  *
  * @author Alumno
@@ -17,8 +18,54 @@ public class VistaPrincipal extends javax.swing.JFrame {
      */
     public VistaPrincipal() {
         initComponents();
+        setTitle("Sistema de Autogestión Estudiantil");
+        setLocationRelativeTo(null); // Centra la ventana en la pantalla al iniciar
     }
-
+    public void mostrarCarta(String name) {
+        java.awt.CardLayout cl = (java.awt.CardLayout) panelCentral.getLayout();
+        cl.show(panelCentral, name);
+    }
+    public void setTextoEstado(String mensaje) {
+        lblEstado.setText(mensaje);
+    }
+    public void setLabelsPerfil(String nombre, String carrera, String anio) {
+        lblNombre.setText("Nombre: " + nombre);
+        lblCarrera.setText("Carrera: " + carrera);
+        lblAño.setText("Año: " + anio);
+    }
+    public void limpiarCamposInscripcion() {
+        txtNombreMateria.setText("");
+        txtCodigo.setText("");
+        txtCautrimestre.setText("");
+        txtAnio.setText("");
+        txtNota.setText("");
+    }
+    // --- Botones de Navegación Lateral ---
+    public javax.swing.JButton getBtnPanelPrincipal() { return btnPanelPrincipal; }
+    public javax.swing.JButton getBtnPerfil() { return btnPerfil; }
+    public javax.swing.JButton getBtnReportes() { return btnReportes; }
+    // --- Botones de Operaciones ---
+    public javax.swing.JButton getBtnInscribir() { return btnInscribir; }
+    public javax.swing.JButton getBtnAsistencia() { return btnAsistencia; }
+    public javax.swing.JButton getBtnNota() { return btnNota; }
+    public javax.swing.JButton getBtnBaja() { return btnBaja; }
+    // --- Elementos del JMenuBar Superior ---
+    public javax.swing.JMenuItem getjMItemCerrar() { return jMItemCerrar; }
+    public javax.swing.JMenuItem getjMItemSituacion() { return jMItemSituacion; }
+    public javax.swing.JMenuItem getjMItemMatRiesgo() { return jMItemMatRiesgo; }
+    public javax.swing.JMenuItem getjMItemMatAprob() { return jMItemMatAprob; }
+    // --- Componentes de Visualización y Selección ---
+    public javax.swing.JTable getTablaMaterias() { return TablaMaterias; }
+    public javax.swing.JList<String> getLstAlertas() { return lstAlertas; }
+    public javax.swing.JComboBox<String> getCmbAsistencia() { return cmbAsistencia; }
+    public javax.swing.JTextArea getTxtReporte() { return txtReporte; }
+    // --- Captura de Cajas de Texto (Inputs) ---
+    public String getTxtNombreMateria() { return txtNombreMateria.getText().trim(); }
+    public String getTxtCodigo() { return txtCodigo.getText().trim(); }
+    public String getTxtCuatrimestre() { return txtCautrimestre.getText().trim(); } 
+    public String getTxtAnio() { return txtAnio.getText().trim(); }
+    public String getTxtNota() { return txtNota.getText().trim(); }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -336,11 +383,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -348,13 +390,16 @@ public class VistaPrincipal extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new VistaPrincipal().setVisible(true));
+        /* Ejecución coordinada con el Controlador */
+       /* Ejecución coordinada con el Controlador */
+        java.awt.EventQueue.invokeLater(() -> {
+            VistaPrincipal vista = new VistaPrincipal();
+            ControladorAutogestion controlador = new ControladorAutogestion(vista);
+            vista.setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
