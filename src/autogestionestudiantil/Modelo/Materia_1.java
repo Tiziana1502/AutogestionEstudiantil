@@ -82,4 +82,22 @@ public class Materia_1 implements Consultable {
         System.out.println("Cuatrimestre: " + cuatrimestre);
         System.out.println("Año: " + anio);
     }
+
+    public String toTexto() {
+        return nombre + ";" + codigo + ";" + cuatrimestre + ";" + anio;
+    }
+
+    public static Materia_1 fromTexto(String linea) {
+        String[] partes = linea.split(";");
+        String nombre = partes[0];
+        String codigo = partes[1];
+        int cuatrimestre = Integer.parseInt(partes[2]);
+        int anio = Integer.parseInt(partes[3]);
+        codigosUtilizados.remove(codigo);
+        return new Materia_1(nombre, codigo, cuatrimestre, anio);
+    }
+
+    public static void limpiarCodigosUtilizados() {
+        codigosUtilizados.clear();
+    }
 }

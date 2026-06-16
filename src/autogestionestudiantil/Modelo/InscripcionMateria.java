@@ -10,7 +10,7 @@
 package autogestionestudiantil;
 import java.util.ArrayList;
 
-public class InscripcionMateria implements Evaluable, Rankeable{
+public class InscripcionMateria implements Evaluable {
     private Materia_1 materia;
     private int totalClases;
     private int clasesAsistidas;
@@ -76,12 +76,7 @@ public class InscripcionMateria implements Evaluable, Rankeable{
     public int getTotalClases() { return totalClases; }
     public int getClasesAsistidas() { return clasesAsistidas; }
     public ArrayList<Double> getNotas() { return new ArrayList<>(notas); }
-    
-    @Override
-    public double getPuntajeRanking() {
-        return (getPromedio() * 0.6) + (getPorcentajeAsistencia() * 0.4);
-    }
- 
+     
     public double getPorcentajeAsistencia() {
         if (totalClases == 0) return 0.0;
         return ((double) clasesAsistidas / totalClases) * 100;
@@ -117,5 +112,48 @@ public class InscripcionMateria implements Evaluable, Rankeable{
         suma += nota;
     }
     return suma / notas.size();
+    }
+
+    public String toTexto() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(materia.getCodigo()).append(";");
+        sb.append(materia.getNombre()).append(";");
+        sb.append(materia.getCuatrimestre()).append(";");
+        sb.append(materia.getAnio()).append(";");
+        sb.append(totalClases).append(";");
+        sb.append(clasesAsistidas).append(";");
+        for (int i = 0; i < notas.size(); i++) {
+            sb.append(notas.get(i));
+            if (i < notas.size() - 1) sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public static InscripcionMateria fromTexto(String linea) {
+        String[] partes = linea.split(";");
+        String codigo = partes[0];
+        String nombre = partes[1];
+        int cuatrimestre = Integer.parseInt(partes[2]);
+        int anio = Integer.parseInt(partes[3]);
+        int totalClases = Integer.parseInt(partes[4]);
+        int clasesAsistidas = Integer.parseInt(partes[5]);
+
+        Materia_1 materia = Materia_1.fromTexto(nombre + ";" + codigo + ";" + cuatrimestre + ";" + anio);
+        InscripcionMateria ins = new InscripcionMateria(materia);
+
+        for (int i = 0; i < clasesAsistidas; i++) {
+            ins.registrarAsistencia(true);
+        }
+        for (int i = 0; i < (totalClases - clasesAsistidas); i++) {
+            ins.registrarAsistencia(false);
+        }
+
+        if (partes.length > 6 && !partes[6].isEmpty()) {
+            String[] notasArr = partes[6].split(",");
+            for (String nota : notasArr) {
+                ins.agregarNota(Double.parseDouble(nota));
+            }
+        }
+        return ins;
     }
 }
