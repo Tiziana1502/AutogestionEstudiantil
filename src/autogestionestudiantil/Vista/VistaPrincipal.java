@@ -28,10 +28,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
     public void setTextoEstado(String mensaje) {
         lblEstado.setText(mensaje);
     }
-    public void setLabelsPerfil(String nombre, String carrera, String anio) {      
+    public void setLabelsPerfil(String nombre, String carrera, String anio, String legajo) {      
         lblPerfilNombre.setText(nombre);
         lblPerfilCarrera.setText(carrera);
         lblPerfilAnio.setText(anio);
+        lblLegajos.setText(legajo);
     }
     public void setLabelMateriasCount(int cantidad) {
         lblPerfilMaterias.setText(String.valueOf(cantidad));
@@ -44,29 +45,31 @@ public class VistaPrincipal extends javax.swing.JFrame {
         txtNota.setText("");
     }     
     
-    // --- Botones de Navegación Lateral ---
+    //Botones para manejar las cartas
     public javax.swing.JButton getBtnPanelPrincipal() { return btnPanelPrincipal; }
     public javax.swing.JButton getBtnPerfil() { return btnPerfil; }
     public javax.swing.JButton getBtnReportes() { return btnReportes; }
-    // --- Botones de Operaciones ---
+    //Botones de Operaciones 
     public javax.swing.JButton getBtnInscribir() { return btnInscribir; }
     public javax.swing.JButton getBtnAsistencia() { return btnAsistencia; }
     public javax.swing.JButton getBtnInscribirAlumno() { return btnInscribirAlumno; }
     public javax.swing.JButton getBtnNota() { return btnNota; }
     public javax.swing.JButton getBtnBaja() { return btnBaja; }
+    public javax.swing.JButton getBtnGuardarCambios() { return btnGuardarCambios; }
     public javax.swing.JButton  getBtnVolverPrincipal() { return btnVolverPrincipal; }
+    public javax.swing.JButton  getBtnBuscar() { return btnBuscar; }
     public javax.swing.JSpinner getJsCuatrimestre()     { return jsCuatrimestre;    }
-    // --- Elementos del JMenuBar Superior ---
+    //Elementos del JMenuBar Superior
     public javax.swing.JMenuItem getjMItemCerrar() { return jMItemCerrar; }
     public javax.swing.JMenuItem getjMItemSituacion() { return jMItemSituacion; }
     public javax.swing.JMenuItem getjMItemMatRiesgo() { return jMItemMatRiesgo; }
     public javax.swing.JMenuItem getjMItemMatAprob() { return jMItemMatAprob; }
-    // --- Componentes de Visualización y Selección ---
+    //Tablas, Lista y CmbAsistencia
     public javax.swing.JTable getTablaMaterias() { return TablaMaterias; }
     public javax.swing.JList<String> getLstAlertas() { return lstAlertas; }
     public javax.swing.JComboBox<String> getCmbAsistencia() { return cmbAsistencia; }
     public javax.swing.JTextArea getTxtReporte() { return txtReporte; }
-    // --- Captura de Cajas de Texto (Inputs) ---
+    //Captura de txt 
     public String getTxtNombreMateria() { return txtNombreMateria.getText().trim(); }
     public String getTxtCodigo() { return txtCodigo.getText().trim(); }
     public String getTxtCuatrimestre() { return jsCuatrimestre.getValue().toString();} 
@@ -74,7 +77,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
     public String getTxtNota() { return txtNota.getText().trim(); }
     public String getTxtNombreAlumno() { return txtNombreAlumno.getText().trim(); }
     public String getTxtCarreras() { return txtCarreras.getText().trim(); }
-  
+    public String getTxtLegajo() { return txtLegajo.getText().trim(); }
+    public String getTxtBuscar() { return txtBuscar.getText().trim(); }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,9 +134,16 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         lblNomb1 = new javax.swing.JLabel();
         txtNombreAlumno = new javax.swing.JTextField();
+        lblLegajo = new javax.swing.JLabel();
+        txtLegajo = new javax.swing.JTextField();
         lblCarrera = new javax.swing.JLabel();
         txtCarreras = new javax.swing.JTextField();
         btnInscribirAlumno = new javax.swing.JButton();
+        btnGuardarCambios = new javax.swing.JButton();
+        jPanel12 = new javax.swing.JPanel();
+        lblNomb2 = new javax.swing.JLabel();
+        txtBuscar = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         cartaPerfil = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         lblTituloPerfil = new javax.swing.JLabel();
@@ -145,6 +156,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
         lblPerfilAnio = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         lblPerfilMaterias = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblLegajos = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         btnVolverPrincipal = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -224,6 +237,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 "Materia", "Codigo", "Condicion", "Asistencia", "Promedio"
             }
         ));
+        TablaMaterias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaMateriasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TablaMaterias);
 
         lstAlertas.setModel(new javax.swing.AbstractListModel<String>() {
@@ -237,7 +255,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         lblAlertas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblAlertas.setText("Alertas de Asistencia:");
 
-        lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblEstado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jPanel4.setLayout(new java.awt.GridLayout(2, 1));
@@ -309,6 +327,12 @@ public class VistaPrincipal extends javax.swing.JFrame {
         txtNombreAlumno.setColumns(12);
         jPanel11.add(txtNombreAlumno);
 
+        lblLegajo.setText("Legajo:");
+        jPanel11.add(lblLegajo);
+
+        txtLegajo.setColumns(7);
+        jPanel11.add(txtLegajo);
+
         lblCarrera.setText("Carrera:");
         jPanel11.add(lblCarrera);
 
@@ -316,8 +340,24 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jPanel11.add(txtCarreras);
 
         btnInscribirAlumno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnInscribirAlumno.setText("Inscribir materia");
+        btnInscribirAlumno.setText("Inscribir Alumno");
         jPanel11.add(btnInscribirAlumno);
+
+        btnGuardarCambios.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnGuardarCambios.setText("Guardar Cambios");
+        jPanel11.add(btnGuardarCambios);
+
+        jPanel12.setBackground(new java.awt.Color(196, 218, 250));
+
+        lblNomb2.setText("Ingrese Nombre o Código para buscar materia:");
+        jPanel12.add(lblNomb2);
+
+        txtBuscar.setColumns(12);
+        jPanel12.add(txtBuscar);
+
+        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscar.setText("Buscar Materia");
+        jPanel12.add(btnBuscar);
 
         javax.swing.GroupLayout cartaPrincipalLayout = new javax.swing.GroupLayout(cartaPrincipal);
         cartaPrincipal.setLayout(cartaPrincipalLayout);
@@ -328,27 +368,26 @@ public class VistaPrincipal extends javax.swing.JFrame {
                     .addGroup(cartaPrincipalLayout.createSequentialGroup()
                         .addGap(836, 836, 836)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1001, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(cartaPrincipalLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(cartaPrincipalLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
+                        .addGap(57, 57, 57)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53)
                         .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(cartaPrincipalLayout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cartaPrincipalLayout.createSequentialGroup()
-                                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(33, 33, 33))))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1001, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         cartaPrincipalLayout.setVerticalGroup(
@@ -357,25 +396,33 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
-                .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(cartaPrincipalLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)))
+                .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cartaPrincipalLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addComponent(lblAlertas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addGroup(cartaPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(cartaPrincipalLayout.createSequentialGroup()
+                                .addGap(277, 277, 277)
+                                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cartaPrincipalLayout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(25, 25, 25))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cartaPrincipalLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)))
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addGap(15, 15, 15)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -390,7 +437,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         cartaPerfil.add(jPanel9, java.awt.BorderLayout.PAGE_START);
 
         pnlDatosPerfil.setBackground(new java.awt.Color(196, 218, 250));
-        pnlDatosPerfil.setLayout(new java.awt.GridLayout(4, 2, 0, 10));
+        pnlDatosPerfil.setLayout(new java.awt.GridLayout(5, 2, 0, 10));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -428,6 +475,15 @@ public class VistaPrincipal extends javax.swing.JFrame {
         lblPerfilMaterias.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pnlDatosPerfil.add(lblPerfilMaterias);
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Legajo:");
+        pnlDatosPerfil.add(jLabel5);
+
+        lblLegajos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblLegajos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnlDatosPerfil.add(lblLegajos);
+
         cartaPerfil.add(pnlDatosPerfil, java.awt.BorderLayout.CENTER);
 
         btnVolverPrincipal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -437,17 +493,17 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(399, 399, 399)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap(472, Short.MAX_VALUE)
                 .addComponent(btnVolverPrincipal)
-                .addContainerGap(443, Short.MAX_VALUE))
+                .addGap(416, 416, 416))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
+                .addContainerGap(38, Short.MAX_VALUE)
                 .addComponent(btnVolverPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addGap(26, 26, 26))
         );
 
         cartaPerfil.add(jPanel10, java.awt.BorderLayout.PAGE_END);
@@ -489,7 +545,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    public void setCodigoEditable(boolean estado) {
+        txtCodigo.setEditable(estado);
+    }
     private void jMItemCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemCerrarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMItemCerrarActionPerformed
@@ -501,6 +560,21 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void cmbAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAsistenciaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbAsistenciaActionPerformed
+
+    private void TablaMateriasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaMateriasMouseClicked
+        // TODO add your handling code here:
+        int fila = TablaMaterias.getSelectedRow();
+        if (fila >= 0) {        
+            String materia = TablaMaterias.getValueAt(fila, 0).toString();
+            String codigo = TablaMaterias.getValueAt(fila, 1).toString();
+              
+            txtNombreMateria.setText(materia);
+            txtCodigo.setText(codigo);
+            txtCodigo.setEditable(false);      
+            btnInscribir.setVisible(false);
+            btnGuardarCambios.setVisible(true);
+    }
+    }//GEN-LAST:event_TablaMateriasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -531,6 +605,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable TablaMaterias;
     private javax.swing.JButton btnAsistencia;
     private javax.swing.JButton btnBaja;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JButton btnInscribir;
     private javax.swing.JButton btnInscribirAlumno;
     private javax.swing.JButton btnNota;
@@ -547,6 +623,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuItem jMItemCerrar;
@@ -557,6 +634,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -575,8 +653,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblCuatrimestre;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblEstadoReporte;
+    private javax.swing.JLabel lblLegajo;
+    private javax.swing.JLabel lblLegajos;
     private javax.swing.JLabel lblNomb;
     private javax.swing.JLabel lblNomb1;
+    private javax.swing.JLabel lblNomb2;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPerfilAnio;
     private javax.swing.JLabel lblPerfilCarrera;
@@ -588,8 +669,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel pnlDatosPerfil;
     private javax.swing.JPanel pnlInscripcion;
     private javax.swing.JTextField txtAnio;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCarreras;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtLegajo;
     private javax.swing.JTextField txtNombreAlumno;
     private javax.swing.JTextField txtNombreMateria;
     private javax.swing.JTextField txtNota;

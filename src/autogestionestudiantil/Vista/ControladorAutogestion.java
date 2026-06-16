@@ -47,7 +47,11 @@ public class ControladorAutogestion implements ActionListener {
         this.vista.getBtnAsistencia().addActionListener(this);
         this.vista.getBtnNota().addActionListener(this);
         this.vista.getBtnBaja().addActionListener(this);
+        this.vista.getBtnBuscar().addActionListener(this);
+        this.vista.getBtnGuardarCambios().addActionListener(this);
         refrescarPantallaCompleta();
+        
+        this.vista.mostrarCarta("card2"); //para que inicie en Panel Principal
     }
 
     private void inicializarEstudiante() {
@@ -99,18 +103,25 @@ public class ControladorAutogestion implements ActionListener {
         else if (e.getSource() == vista.getBtnInscribirAlumno()) {
             ejecutarRegistroAlumno();
         }
+        else if (e.getSource() == vista.getBtnBuscar()) {
+            ejecutarBusqueda();
+        }
+        else if (e.getSource() == vista.getBtnGuardarCambios()) {
+            ejecutarEdicionMateria();
+        }
     }
     
     private void ejecutarRegistroAlumno() {
         String nombre = vista.getTxtNombreAlumno();
         String carrera = vista.getTxtCarreras();
+        String legajo = vista.getTxtLegajo();
 
         if (nombre.isEmpty() || carrera.isEmpty()) {
             vista.setTextoEstado("Error: Ingrese el nombre y la carrera del alumno.");
             return;
         }        
         ArrayList<InscripcionMateria> materiasPrevias = estudianteActual.getMaterias();       
-        estudianteActual = new Estudiante(nombre, "12345", carrera, 2026);        
+        estudianteActual = new Estudiante(nombre, legajo, carrera, 2026);        
   
         for (InscripcionMateria m : materiasPrevias) {
             estudianteActual.getMaterias().add(m);
@@ -127,10 +138,11 @@ public class ControladorAutogestion implements ActionListener {
     private void ejecutarInscripcion() {
     String nombre = vista.getTxtNombreMateria();
         String codigo = vista.getTxtCodigo();
+        String legajo = vista.getTxtLegajo();
         String cuatrimestreStr = vista.getTxtCuatrimestre();
         String anioStr = vista.getTxtAnio();
 
-        if (nombre.isEmpty() || codigo.isEmpty() || cuatrimestreStr.isEmpty() || anioStr.isEmpty()) {
+        if (nombre.isEmpty() || codigo.isEmpty() || cuatrimestreStr.isEmpty() || anioStr.isEmpty()|| legajo.isEmpty()){
             vista.setTextoEstado("Error: Faltan completar campos obligatorios.");
             return;
         }       
@@ -240,9 +252,27 @@ public class ControladorAutogestion implements ActionListener {
             vista.setTextoEstado("Materia dada de baja.");
         }
     }
+    private void ejecutarEdicionMateria() {
+        int fila = vista.getTablaMaterias().getSelectedRow();
+        String codigo = vista.getTxtCodigo(); 
+        String nuevoNombre = vista.getTxtNombreMateria();
+        int nuevoCuatrimestre = Integer.parseInt(vista.getTxtCuatrimestre());
+        
+        InscripcionMateria ins = estudianteActual.getInscripcion(codigo);
+        if (ins != null) {
+            ins.getMateria().setNombre(nuevoNombre);
+            ins.getMateria().setCuatrimestre(nuevoCuatrimestre);           
+           
+            inscMateriaDAO.guardarInscripciones(estudianteActual.getMaterias());           
+            vista.getTablaMaterias().setValueAt(nuevoNombre, fila, 0); 
+            vista.limpiarCamposInscripcion();
+            vista.setCodigoEditable(true);
+            vista.setTextoEstado("Registro editado correctamente.");
+        }
+    }
 
     private void refrescarPantallaCompleta() {
-        vista.setLabelsPerfil(estudianteActual.getNombre(), estudianteActual.getCarrera(), String.valueOf(estudianteActual.getAnioIngreso()));
+        vista.setLabelsPerfil(estudianteActual.getNombre(), estudianteActual.getCarrera(), String.valueOf(estudianteActual.getAnioIngreso()), estudianteActual.getLegajo());
 
         String[] columnas = {"Materia", "Código", "Condición", "Asistencia %", "Promedio"};
         DefaultTableModel modelTable = new DefaultTableModel(columnas, 0);
@@ -267,6 +297,32 @@ public class ControladorAutogestion implements ActionListener {
         }
         vista.getLstAlertas().setModel(modelLista);
     }
+    
+    private void ejecutarBusqueda() {
+        String textoBusqueda = vista.getTxtBuscar().toLowerCase();
+        javax.swing.JTable tabla = vista.getTablaMaterias();
+        boolean encontrado = false;
+
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            String nombreColumna = tabla.getValueAt(i, 0).toString().toLowerCase();
+            String codigoColumna = tabla.getValueAt(i, 1).toString().toLowerCase();
+
+            if (nombreColumna.contains(textoBusqueda) || codigoColumna.equals(textoBusqueda)) {                
+                tabla.setSelectionBackground(new java.awt.Color(196, 218, 250));               
+                tabla.setSelectionForeground(java.awt.Color.BLACK);
+                tabla.setRowSelectionInterval(i, i);               
+                tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
+                
+                vista.setTextoEstado("Materia encontrada.");
+                encontrado = true;
+                break;
+            }
+        }
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(vista, "No se encontró ninguna materia con ese nombre o código.");
+            tabla.clearSelection();
+        }
+    }
     private void generarReporteGeneral() {
         StringBuilder sb = new StringBuilder();
         sb.append("=========================================\n");
@@ -289,7 +345,10 @@ public class ControladorAutogestion implements ActionListener {
         sb.append("=========================================\n");
         sb.append("       MATERIAS EN ALERTA / RIESGO       \n");
         sb.append("=========================================\n\n");
-        ArrayList<InscripcionMateria> criticas = estudianteActual.getMateriasCriticas();
+        
+        ArrayList<InscripcionMateria> criticas = estudianteActual.getMateriasCriticas();        
+        //Ordenamiento ascendente del bonus
+        criticas.sort((m1, m2) -> Double.compare(m1.getPorcentajeAsistencia(), m2.getPorcentajeAsistencia()));
         if (criticas.isEmpty()) {
             sb.append("No se registran materias en riesgo (Asistencia entre 75% y 85%).");
         } else {
@@ -307,16 +366,30 @@ public class ControladorAutogestion implements ActionListener {
         sb.append("           MATERIAS APROBADAS            \n");
         sb.append("=========================================\n\n");
         int contador = 0;
+        double sumaTotal = 0;
+        double maxGlobal = -1;
+        double minGlobal = 11; 
         for (InscripcionMateria ins : estudianteActual.getMaterias()) {
             if (ins.estaAprobada()) {
-                sb.append("✅ ").append(ins.getMateria().getNombre())
-                  .append(" | Promedio: ").append(String.format("%.2f", ins.getPromedio())).append("\n");
+                double prom = ins.getPromedio();               
+                sumaTotal += prom;
+                if (prom > maxGlobal) maxGlobal = prom;
+                if (prom < minGlobal) minGlobal = prom;
                 contador++;
+                sb.append("✅ ").append(ins.getMateria().getNombre())
+                  .append(" | Promedio: ").append(String.format("%.2f", prom)).append("\n");
             }
-        }
+        }        
         if (contador == 0) {
-            sb.append("No hay materias aprobadas actualmente.");
-        }
-        vista.getTxtReporte().setText(sb.toString());
+            sb.append("No hay materias aprobadas actualmente.\n");
+        } else {
+            double promedioConjunto = sumaTotal / contador;
+            sb.append("\n=========================================\n");
+            sb.append("RESULTADO DE NOTAS:\n");
+            sb.append("-> Nota Máxima: ").append(String.format("%.2f", maxGlobal)).append("\n");
+            sb.append("-> Nota Mínima: ").append(String.format("%.2f", minGlobal)).append("\n");
+            sb.append("-> Promedio General: ").append(String.format("%.2f", promedioConjunto)).append("\n");
+        }        
+        vista.getTxtReporte().setText(sb.toString());       
     }
 }

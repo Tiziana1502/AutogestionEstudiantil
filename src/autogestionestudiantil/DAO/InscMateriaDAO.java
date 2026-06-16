@@ -12,11 +12,7 @@ import java.util.ArrayList;
  */
 public class InscMateriaDAO {        
     private static final String ARCHIVO = "inscripciones.txt"; 
-  
-    private static final String SEP       = ";";   
-    private static final String SEP_NOTAS = ",";  
- 
-   
+
     public void guardarInscripciones(ArrayList<InscripcionMateria> inscripciones) { 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARCHIVO))) { 
             for (InscripcionMateria ins : inscripciones) {
