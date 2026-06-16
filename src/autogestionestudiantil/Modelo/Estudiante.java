@@ -31,7 +31,7 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         System.out.println("Carrera:  " + carrera);
         System.out.println("Ingreso:  " + anioIngreso);
         System.out.println("Materias: " + materias.size());
-        System.out.printf( "Promedio: %.2f%n", getPromedioGeneral());
+        //System.out.printf( "Promedio: %.2f%n", getPromedioGeneral());
     } 
    
     public void inscribirse(Materia_1 nuevaMateria) {
@@ -121,12 +121,6 @@ public class Estudiante extends PersonaAcademica implements Consultable{
         return criticas;
     }
     
-    public ArrayList<InscripcionMateria> getRankingMaterias() {
-        ArrayList<InscripcionMateria> listaOrdenada = new ArrayList<>(this.materias);
-        listaOrdenada.sort((m1, m2) -> Double.compare(m2.getPuntajeRanking(), m1.getPuntajeRanking()));
-        return listaOrdenada;
-    }
-
     public String getCarrera() { return carrera; }
  
     public void setCarrera(String carrera) {
@@ -146,7 +140,19 @@ public class Estudiante extends PersonaAcademica implements Consultable{
             this.anioIngreso = anioIngreso;
         }
     }
- 
     public ArrayList<InscripcionMateria> getMaterias() { return this.materias; }
+
+    public String toTexto() {
+        return getNombre() + ";" + getLegajo() + ";" + carrera + ";" + anioIngreso;
+    }
+
+    public static Estudiante fromTexto(String linea) {
+        String[] partes = linea.split(";");
+        String nombre = partes[0];
+        String legajo = partes[1];
+        String carrera = partes[2];
+        int anioIngreso = Integer.parseInt(partes[3]);
+        return new Estudiante(nombre, legajo, carrera, anioIngreso);
+    }
 }
 
