@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package autogestionestudiantil.Vista; // <-- Asegura que use la carpeta correcta en minúsculas
+package autogestionestudiantil.Vista; 
 
-// IMPORTAMOS LAS CLASES DEL BACKEND QUE ESTÁN EN LOS OTROS PAQUETES
+// Importamos las clases que están en otros paquetes
 import autogestionestudiantil.Estudiante;
 import autogestionestudiantil.InscripcionMateria;
 import autogestionestudiantil.Materia_1;
@@ -22,35 +22,31 @@ import javax.swing.table.DefaultTableModel;
 public class ControladorAutogestion implements ActionListener {
 
     private VistaPrincipal vista;
-    private Estudiante estudianteActual;
-    
+    private Estudiante estudianteActual;    
     private EstudianteDAO estudianteDAO;
     private InscMateriaDAO inscMateriaDAO;
 
     public ControladorAutogestion(VistaPrincipal vista) {
         this.vista = vista;
         this.estudianteDAO = new EstudianteDAO();
-        this.inscMateriaDAO = new InscMateriaDAO();
-        
+        this.inscMateriaDAO = new InscMateriaDAO();        
         inicializarEstudiante();
         
         vista.getCmbAsistencia().setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Presente", "Ausente" }));
-
-        // Enlazar componentes de navegación
+       
         this.vista.getBtnPanelPrincipal().addActionListener(this);
         this.vista.getBtnPerfil().addActionListener(this);
         this.vista.getBtnReportes().addActionListener(this);
+        this.vista.getBtnVolverPrincipal().addActionListener(this);
         this.vista.getjMItemCerrar().addActionListener(this);
         this.vista.getjMItemSituacion().addActionListener(this);
         this.vista.getjMItemMatRiesgo().addActionListener(this);
-        this.vista.getjMItemMatAprob().addActionListener(this);
-
-        // Enlazar botones de operaciones
+        this.vista.getjMItemMatAprob().addActionListener(this);    
+        this.vista.getBtnInscribirAlumno().addActionListener(this);
         this.vista.getBtnInscribir().addActionListener(this);
         this.vista.getBtnAsistencia().addActionListener(this);
         this.vista.getBtnNota().addActionListener(this);
         this.vista.getBtnBaja().addActionListener(this);
-
         refrescarPantallaCompleta();
     }
 
@@ -62,18 +58,20 @@ public class ControladorAutogestion implements ActionListener {
             for (InscripcionMateria ins : inscripciones) {
                 this.estudianteActual.getMaterias().add(ins);
             }
-        } else {
-            this.estudianteActual = new Estudiante("Agustina Bosco", "12345", "Programacion", 2023);
-            ArrayList<Estudiante> guardarLista = new ArrayList<>();
-            guardarLista.add(estudianteActual);
-            estudianteDAO.guardarEstudiantes(guardarLista);
+        } else {            
+            this.estudianteActual = new Estudiante("", "Sin Legajo", "", 2026); 
         }
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == vista.getBtnPanelPrincipal() || e.getSource() == vista.getBtnPerfil()) {
-            vista.mostrarCarta("card2");
-        } else if (e.getSource() == vista.getBtnReportes()) {
+        if (e.getSource() == vista.getBtnPanelPrincipal() || e.getSource() == vista.getBtnVolverPrincipal()) {
+            vista.mostrarCarta("card2"); 
+        }         
+        else if (e.getSource() == vista.getBtnPerfil()) {
+            vista.mostrarCarta("card4");            
+            vista.setLabelMateriasCount(estudianteActual.getMaterias().size());
+        } 
+        else if (e.getSource() == vista.getBtnReportes()) {
             vista.mostrarCarta("card3");
             generarReporteGeneral();
         } else if (e.getSource() == vista.getjMItemCerrar()) {
@@ -98,10 +96,36 @@ public class ControladorAutogestion implements ActionListener {
         } else if (e.getSource() == vista.getBtnBaja()) {
             ejecutarBajaMateria();
         }
+        else if (e.getSource() == vista.getBtnInscribirAlumno()) {
+            ejecutarRegistroAlumno();
+        }
+    }
+    
+    private void ejecutarRegistroAlumno() {
+        String nombre = vista.getTxtNombreAlumno();
+        String carrera = vista.getTxtCarreras();
+
+        if (nombre.isEmpty() || carrera.isEmpty()) {
+            vista.setTextoEstado("Error: Ingrese el nombre y la carrera del alumno.");
+            return;
+        }        
+        ArrayList<InscripcionMateria> materiasPrevias = estudianteActual.getMaterias();       
+        estudianteActual = new Estudiante(nombre, "12345", carrera, 2026);        
+  
+        for (InscripcionMateria m : materiasPrevias) {
+            estudianteActual.getMaterias().add(m);
+        }
+        
+        ArrayList<Estudiante> guardarLista = new ArrayList<>();
+        guardarLista.add(estudianteActual);
+        estudianteDAO.guardarEstudiantes(guardarLista);      
+        vista.setTextoEstado("Datos del alumno guardados correctamente.");
+        JOptionPane.showMessageDialog(null, "¡Bienvenido/a, " + nombre + "!");      
+        refrescarPantallaCompleta(); 
     }
 
     private void ejecutarInscripcion() {
-        String nombre = vista.getTxtNombreMateria();
+    String nombre = vista.getTxtNombreMateria();
         String codigo = vista.getTxtCodigo();
         String cuatrimestreStr = vista.getTxtCuatrimestre();
         String anioStr = vista.getTxtAnio();
@@ -109,8 +133,11 @@ public class ControladorAutogestion implements ActionListener {
         if (nombre.isEmpty() || codigo.isEmpty() || cuatrimestreStr.isEmpty() || anioStr.isEmpty()) {
             vista.setTextoEstado("Error: Faltan completar campos obligatorios.");
             return;
+        }       
+        if (!codigo.matches("\\d+")) {
+            JOptionPane.showMessageDialog(vista, "Error: El código de la materia debe contener solo números.", "Validación de Código", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-
         try {
             int cuatrimestre = Integer.parseInt(cuatrimestreStr);
             int anio = Integer.parseInt(anioStr);
@@ -148,7 +175,6 @@ public class ControladorAutogestion implements ActionListener {
             if (inscripcion.getPorcentajeAsistencia() < 75.0) {
                 JOptionPane.showMessageDialog(vista, "ALERTA: Asistencia menor al 75% en " + inscripcion.getMateria().getNombre(), "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
-
             inscMateriaDAO.guardarInscripciones(estudianteActual.getMaterias());
             refrescarPantallaCompleta();
             vista.setTextoEstado("Asistencia registrada.");
